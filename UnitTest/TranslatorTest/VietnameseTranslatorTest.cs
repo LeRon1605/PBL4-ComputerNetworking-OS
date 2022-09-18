@@ -18,7 +18,7 @@ namespace UnitTest.TranslatorTest
         [InlineData("")]
         [InlineData("1a3")]
         [InlineData("_12@3")]
-        public void GivenInvalidNumber_WhenTranslate_ThenShouldWork(string number)
+        public void GivenInvalidNumber_WhenTranslate_ThenShouldReturnNull(string number)
         {
             string actual = translator.Translate(number);
             Assert.Null(actual);
@@ -40,6 +40,7 @@ namespace UnitTest.TranslatorTest
         [Theory]
         [InlineData("0", "Không")]
         [InlineData("01", "Một")]
+        [InlineData("010", "Mười")]
         [InlineData("0000123456", "Một trăm hai mươi ba nghìn bốn trăm năm mươi sáu")]
         public void GivenLeadZeroNumber_WhenTranslate_ThenShouldWork(string number, string expected)
         {
@@ -51,8 +52,11 @@ namespace UnitTest.TranslatorTest
         [Theory]
         [InlineData("1", "Một")]
         [InlineData("12", "Mười hai")]
+        [InlineData("10", "Mười")]
+        [InlineData("11", "Mười một")]
+        [InlineData("15", "Mười lăm")]
         [InlineData("125", "Một trăm hai mươi lăm")]
-        [InlineData("102", "Một trăm lẻ hai")]
+        [InlineData("101", "Một trăm lẻ một")]
         public void GivenSimpleNumber_WhenTranslate_ThenShouldWork(string number, string expected)
         {
             string actual = translator.Translate(number);
@@ -64,9 +68,13 @@ namespace UnitTest.TranslatorTest
         [InlineData("10", "Mười")]
         [InlineData("100", "Một trăm")]
         [InlineData("1000", "Một nghìn")]
+        [InlineData("1000000", "Một triệu")]
+        [InlineData("1000000000", "Một tỷ")]
         public void GivenTailZeroNumber_WhenTranslate_ThenShouldWork(string number, string expected)
         {
-            throw new NotImplementedException();
+            string actual = translator.Translate(number);
+
+            Assert.Equal(actual, expected);
         }
     }
 }

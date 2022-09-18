@@ -8,7 +8,7 @@ namespace UnitTest.TranslatorTest
     {
         void GivenSimpleNumber_WhenTranslate_ThenShouldWork(string number, string expected);
         void GivenLargeNumber_WhenTranslate_ThenShouldWork(string number, string expected);
-        void GivenInvalidNumber_WhenTranslate_ThenShouldWork(string number);
+        void GivenInvalidNumber_WhenTranslate_ThenShouldReturnNull(string number);
         void GivenLeadZeroNumber_WhenTranslate_ThenShouldWork(string number, string expected);
         void GivenTailZeroNumber_WhenTranslate_ThenShouldWork(string number, string expected);
     }
