@@ -12,6 +12,7 @@ namespace ClientApp.View
     {
         public Main()
         {
+            t
             InitializeComponent();
         }
     }
