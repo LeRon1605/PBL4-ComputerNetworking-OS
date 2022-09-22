@@ -25,16 +25,16 @@ namespace UnitTest.TranslatorTest
         }
 
         [Theory]
-        [InlineData("1234", "Một nghìn hai trăm ba mười bốn")]
+        [InlineData("1234", "Một nghìn hai trăm ba mươi bốn")]
         [InlineData("1200200", "Một triệu hai trăm nghìn hai trăm")]
-        [InlineData("1234567891", "Một tỷ hai trăm ba mươi bốn triệu năm trăm sáu mười bảy nghìn tám trăm chín mươi mốt")]
-        [InlineData("1200000", "Một triệu hai")]
-        [InlineData("1000002", "Một trăm nghìn lẻ hai")]
+        [InlineData("1234567891", "Một tỷ hai trăm ba mươi bốn triệu năm trăm sáu mươi bảy nghìn tám trăm chín mươi mốt")]
+        [InlineData("1200000", "Một triệu hai trăm nghìn")]
+        [InlineData("1000002", "Một triệu không trăm nghìn không trăm lẻ hai")]
         public void GivenLargeNumber_WhenTranslate_ThenShouldWork(string number, string expected)
         {
             string actual = translator.Translate(number);
 
-            Assert.Equal(actual, expected);
+            Assert.Equal(expected, actual);
         }
 
         [Theory]
@@ -46,7 +46,7 @@ namespace UnitTest.TranslatorTest
         {
             string actual = translator.Translate(number);
 
-            Assert.Equal(actual, expected);
+            Assert.Equal(expected, actual);
         }
 
         [Theory]
@@ -61,7 +61,7 @@ namespace UnitTest.TranslatorTest
         {
             string actual = translator.Translate(number);
 
-            Assert.Equal(actual, expected);
+            Assert.Equal(expected, actual);
         }
 
         [Theory]
@@ -74,7 +74,7 @@ namespace UnitTest.TranslatorTest
         {
             string actual = translator.Translate(number);
 
-            Assert.Equal(actual, expected);
+            Assert.Equal(expected, actual);
         }
     }
 }
