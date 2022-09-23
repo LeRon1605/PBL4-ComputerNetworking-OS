@@ -1,66 +1,44 @@
-﻿using ServerApp.Models;
+﻿using Models.DTO;
+using Models.Entities;
+using Models.Mapper;
 using ServerApp.Translator;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace ServerApp
 {
     public class Server
     {
-        private Socket serverSocket;
-        
-        private List<Client> clients;
-        private List<Socket> clientSockets;
-        private List<Response> requests;
+        private Socket Socket;
 
-        public Action<List<Response>> RequestProcessHanlder;
-        public Action<List<Client>> ClientConnectedHandler;
-        public EndPoint ServerEndPoint
+        private Repository Repository;
+
+        public Action<List<Response>> OnReceiveData;
+        public Action<List<Client>> OnClientConnectionStateChanged;
+
+        public Server()
         {
-            get
-            {
-                if (serverSocket != null)
-                {
-                    return serverSocket.LocalEndPoint;
-                }
-                return null;
-            }
-        }
-        public Server(string ipAddress, int port)
-        {
-            IPEndPoint ipEndpoint = new IPEndPoint(IPAddress.Parse(ipAddress), port);
-            serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            serverSocket.Bind(ipEndpoint);
-            clientSockets = new List<Socket>();
-            requests = new List<Response>();
-            clients = new List<Client>();
+            Repository = new Repository();
         }
 
-        public void Listen()
+        public void Listen(string ipAddress, int port)
         {
-            serverSocket.Listen(100);
+            Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            Socket.Bind(new IPEndPoint(IPAddress.Parse(ipAddress), port));
+            Socket.Listen(100);
             new Task(() =>
             {
                 while (true)
                 {
                     try
                     {
-                        Socket clientSocket = serverSocket.Accept();
-                        clientSockets.Add(clientSocket);
-                        clients.Add(new Client
-                        {
-                            IPAddress = clientSocket.RemoteEndPoint.ToString(),
-                            Status = "Connected",
-                            ConnectedAt = DateTime.Now
-                        });
-                        ClientConnectedHandler?.Invoke(clients);
+                        Socket clientSocket = Socket.Accept();
+                        Repository.AddClient(clientSocket);
+                        OnClientConnectionStateChanged?.Invoke(Repository.Clients);
                         Task task = new Task(() => Receive(clientSocket));
                         task.Start();
                     }
@@ -69,7 +47,7 @@ namespace ServerApp
                         break;
                     }
                 }
-            }).Start();                                                                                                                                                                                                                            
+            }).Start();
         }
 
         public void Receive(Socket clientSocket)
@@ -79,12 +57,10 @@ namespace ServerApp
                 try
                 {
                     Response res = ProcessRequest(clientSocket);
-                    
                     if (res != null)
                     {
-                        clientSocket.Send(Encoding.UTF8.GetBytes(res.Result));
-                        requests.Add(res);
-                        RequestProcessHanlder?.Invoke(requests);
+                        clientSocket.Send(Encoding.UTF8.GetBytes(Mapper.MapRequest(res).Serialize()));
+                        OnReceiveData?.Invoke(Repository.Responses);
                     }
                 }
                 catch (SocketException)
@@ -92,9 +68,8 @@ namespace ServerApp
                     break;
                 }
             }
-            clients = clients.Where(x => x.IPAddress != clientSocket.RemoteEndPoint.ToString()).ToList();
-            clientSockets = clientSockets.Where(x => x != clientSocket).ToList();
-            ClientConnectedHandler?.Invoke(clients);
+            Repository.RemoveClient(clientSocket);
+            OnClientConnectionStateChanged?.Invoke(Repository.Clients);
             clientSocket.Shutdown(SocketShutdown.Both);
             clientSocket.Close();
         }
@@ -107,33 +82,46 @@ namespace ServerApp
             {
                 return null;
             }
-            ITranslator translator = TranslatorFactory.GetInstance("vi");
-            string number = Encoding.UTF8.GetString(buffer).Replace("\0", "");
-            string result = translator.Translate(number);
+            RequestDTO request = RequestDTO.Deserialize(Encoding.UTF8.GetString(buffer).Replace("\0", ""));
+            string result = TranslatorFactory.GetInstance(request.Lang).Translate(request.Number);
             return new Response
             {
-                ClientIP = clientSocket.RemoteEndPoint.ToString(),
-                Language = "vi",
-                Number = number,
-                Result = result
+                Lang = request.Lang,
+                Number = request.Number,
+                Text = result,
+                Status = (result != null),
+                Exception = null,
+                Client = clientSocket.RemoteEndPoint.ToString(),
+                ResponseAt = DateTime.Now
             };
+        }
+
+        public bool IsListening()
+        {
+            try
+            {
+                return Socket != null && Socket.IsBound && !(Socket.Poll(1, SelectMode.SelectRead) && Socket.Available == 0);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public void Disconnect()
         {
-            foreach (Socket clientSocket in clientSockets)
+            foreach (Socket clientSocket in Repository.ClientSockets)
             {
                 clientSocket.Shutdown(SocketShutdown.Both);
             }
-
-            clientSockets.Clear();
-            clients.Clear();
             
-            serverSocket.Close();
-            
-            ClientConnectedHandler?.Invoke(clients);
+            if (Socket != null)
+            {
+                Socket.Close();
+            }
 
-            serverSocket = null;
+            Repository.Clear();
+            OnClientConnectionStateChanged?.Invoke(Repository.Clients);
         }
     }
 }

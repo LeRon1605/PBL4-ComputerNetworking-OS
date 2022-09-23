@@ -1,4 +1,4 @@
-﻿using ServerApp.Models;
+﻿using Models.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,23 +20,23 @@ namespace ServerApp.View
             InitializeComponent();
             DgvHistory.DataSource = new List<Response>();
             dgvClient.DataSource = new List<Client>();
+            server = new Server()
+            {
+                OnReceiveData = UpdateRequest,
+                OnClientConnectionStateChanged = UpdateClient
+            };
         }
 
         private void btnListen_Click(object sender, EventArgs e)
         {
-            if (server == null)
+            if (!server.IsListening())
             {
                 string ipAddress = txtIpAddress.Text;
                 int port = Convert.ToInt32(txtPort.Text);
                 try
                 {
-                    server = new Server(ipAddress, port)
-                    {
-                        RequestProcessHanlder = UpdateRequest,
-                        ClientConnectedHandler = UpdateClient
-                    };
-                    server.Listen();
-                    OnServerListeningHandler();
+                    server.Listen(ipAddress, port);
+                    ConnectionStateChanged(true);
                 }
                 catch(SocketException)
                 {
@@ -46,8 +46,7 @@ namespace ServerApp.View
             else
             {
                 server.Disconnect();
-                server = null;
-                OnServerShutDownHandler();
+                ConnectionStateChanged(false);
             }
         }
 
@@ -69,30 +68,18 @@ namespace ServerApp.View
             }));
         }
 
-        private void OnServerListeningHandler()
+        public void ConnectionStateChanged(bool state)
         {
-            txtIpAddress.Enabled = false;
-            txtPort.Enabled = false;
-            lbState.Text = "Listening";
-            lbState.BackColor = Color.Green;
-            btnListen.Text = "Shut down";
-        }
-
-        private void OnServerShutDownHandler()
-        {
-            txtIpAddress.Enabled = true;
-            txtPort.Enabled = true;
-            lbState.Text = "Idle";
-            lbState.BackColor = Color.IndianRed;
-            btnListen.Text = "Start";
+            txtIpAddress.Enabled = !state;
+            txtPort.Enabled = !state;
+            lbState.Text = state ? "Listening" : "Idle";
+            lbState.BackColor = state ? Color.Green : Color.IndianRed;
+            btnListen.Text = state ? "Shut down" : "Start";
         }
 
         private void Main_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (server != null)
-            {
-                server.Disconnect();
-            }
+            server.Disconnect();
         }
     }
 }

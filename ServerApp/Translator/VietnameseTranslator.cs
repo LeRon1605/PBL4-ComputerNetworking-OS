@@ -47,7 +47,7 @@ namespace ServerApp.Translator
                 }
                 if (count == 3)
                 {
-                    if (number[j] != '0' || number[j - 1] != '0' || number[j - 2] != '0')
+                    if ((i >= 9 && i % 9 == 0) || number[j] != '0' || number[j - 1] != '0' || number[j - 2] != '0')
                     {
                         switch (i % 9)
                         {
