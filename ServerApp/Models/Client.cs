@@ -8,5 +8,6 @@ namespace ServerApp.Models
     {
         public string IPAddress { get; set; }
         public string Status { get; set; }
+        public DateTime ConnectedAt { get; set; }
     }
 }

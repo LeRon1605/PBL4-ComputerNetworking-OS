@@ -18,6 +18,8 @@ namespace ServerApp.View
         public Main()
         {
             InitializeComponent();
+            DgvHistory.DataSource = new List<Response>();
+            dgvClient.DataSource = new List<Client>();
         }
 
         private void btnListen_Click(object sender, EventArgs e)
@@ -58,7 +60,7 @@ namespace ServerApp.View
             }));
         }
 
-        public void UpdateRequest(List<Request> requests)
+        public void UpdateRequest(List<Response> requests)
         {
             DgvHistory.Invoke(new MethodInvoker(delegate
             {
@@ -83,6 +85,14 @@ namespace ServerApp.View
             lbState.Text = "Idle";
             lbState.BackColor = Color.IndianRed;
             btnListen.Text = "Listening";
+        }
+
+        private void Main_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (server != null)
+            {
+                server.Disconnect();
+            }
         }
     }
 }

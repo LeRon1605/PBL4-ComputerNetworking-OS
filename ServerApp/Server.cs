@@ -15,9 +15,10 @@ namespace ServerApp
     public class Server
     {
         private Socket serverSocket;
-        private List<Socket> clients;
-        private List<Request> requests;
-        public Action<List<Request>> RequestProcessHanlder;
+        private List<Client> clients;
+        private List<Socket> clientSockets;
+        private List<Response> requests;
+        public Action<List<Response>> RequestProcessHanlder;
         public Action<List<Client>> ClientConnectedHandler;
         public EndPoint ServerEndPoint
         {
@@ -35,8 +36,9 @@ namespace ServerApp
             IPEndPoint ipEndpoint = new IPEndPoint(IPAddress.Parse(ipAddress), port);
             serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             serverSocket.Bind(ipEndpoint);
-            clients = new List<Socket>();
-            requests = new List<Request>();
+            clientSockets = new List<Socket>();
+            requests = new List<Response>();
+            clients = new List<Client>();
         }
 
         public void Listen()
@@ -49,12 +51,14 @@ namespace ServerApp
                     try
                     {
                         Socket clientSocket = serverSocket.Accept();
-                        clients.Add(clientSocket);
-                        ClientConnectedHandler?.Invoke(clients.Select(x => new Client
+                        clientSockets.Add(clientSocket);
+                        clients.Add(new Client
                         {
-                            IPAddress = x.RemoteEndPoint.ToString(),
-                            Status = "Connected"
-                        }).ToList());
+                            IPAddress = clientSocket.RemoteEndPoint.ToString(),
+                            Status = "Connected",
+                            ConnectedAt = DateTime.Now
+                        });
+                        ClientConnectedHandler?.Invoke(clients);
                         Task task = new Task(() => Receive(clientSocket));
                         task.Start();
                     }
@@ -74,34 +78,44 @@ namespace ServerApp
                 try
                 {
                     int size = clientSocket.Receive(buffer);
-                    ITranslator translator = new VietnameseTranslator();
-                    string number = Encoding.UTF8.GetString(buffer).Replace("\0", "");
-                    string result = translator.Translate(number);
-                    clientSocket.Send(Encoding.UTF8.GetBytes(result));
-                    requests.Add(new Request
-                    {
-                        ClientIP = clientSocket.RemoteEndPoint.ToString(),
-                        Language = "vi",
-                        Number = number,
-                        Result = result
-                    });
+
+                    Response res = ProcessRequest(buffer, clientSocket);
+                    
+                    clientSocket.Send(Encoding.UTF8.GetBytes(res.Result));
+                    requests.Add(res);
                     RequestProcessHanlder?.Invoke(requests);
                 }
-                catch (SocketException e)
+                catch (SocketException)
                 {
                     //Console.WriteLine($"Client {clientSocket.RemoteEndPoint} disconnected");
+                    clients = clients.Where(x => x.IPAddress != clientSocket.RemoteEndPoint.ToString()).ToList();
+                    ClientConnectedHandler?.Invoke(clients);
                     clientSocket.Close();
                     break;
                 }
             }
         }
 
+        public Response ProcessRequest(byte[] buffer, Socket clientSocket)
+        {
+            ITranslator translator = TranslatorFactory.GetInstance("vi");
+            string number = Encoding.UTF8.GetString(buffer).Replace("\0", "");
+            string result = translator.Translate(number);
+            return new Response
+            {
+                ClientIP = clientSocket.RemoteEndPoint.ToString(),
+                Language = "vi",
+                Number = number,
+                Result = result
+            };
+        }
+
         public void Disconnect()
         {
             serverSocket.Close();
-            foreach (Socket clientSocket in clients)
+            foreach (Socket clientSocket in clientSockets)
             {
-                clientSocket.Close();
+                clientSocket.Shutdown(SocketShutdown.Both);
             }
             serverSocket = null;
         }

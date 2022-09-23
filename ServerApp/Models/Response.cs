@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ServerApp.Models
 {
-    public class Request
+    public class Response
     {
         public string ClientIP { get; set; }
         public string Number { get; set; }
