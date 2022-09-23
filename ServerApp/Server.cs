@@ -15,9 +15,11 @@ namespace ServerApp
     public class Server
     {
         private Socket serverSocket;
+        
         private List<Client> clients;
         private List<Socket> clientSockets;
         private List<Response> requests;
+
         public Action<List<Response>> RequestProcessHanlder;
         public Action<List<Client>> ClientConnectedHandler;
         public EndPoint ServerEndPoint
@@ -72,31 +74,39 @@ namespace ServerApp
 
         public void Receive(Socket clientSocket)
         {
-            while (clientSocket.Connected)
+            while (!((clientSocket.Poll(1000, SelectMode.SelectRead) && (clientSocket.Available == 0)) || !clientSocket.Connected))
             {
                 try
                 {
                     Response res = ProcessRequest(clientSocket);
                     
-                    clientSocket.Send(Encoding.UTF8.GetBytes(res.Result));
-                    requests.Add(res);
-                    RequestProcessHanlder?.Invoke(requests);
+                    if (res != null)
+                    {
+                        clientSocket.Send(Encoding.UTF8.GetBytes(res.Result));
+                        requests.Add(res);
+                        RequestProcessHanlder?.Invoke(requests);
+                    }
                 }
                 catch (SocketException)
                 {
-                    //Console.WriteLine($"Client {clientSocket.RemoteEndPoint} disconnected");
-                    clients = clients.Where(x => x.IPAddress != clientSocket.RemoteEndPoint.ToString()).ToList();
-                    ClientConnectedHandler?.Invoke(clients);
-                    clientSocket.Close();
                     break;
                 }
             }
+            clients = clients.Where(x => x.IPAddress != clientSocket.RemoteEndPoint.ToString()).ToList();
+            clientSockets = clientSockets.Where(x => x != clientSocket).ToList();
+            ClientConnectedHandler?.Invoke(clients);
+            clientSocket.Shutdown(SocketShutdown.Both);
+            clientSocket.Close();
         }
 
         public Response ProcessRequest(Socket clientSocket)
         {
             byte[] buffer = new byte[1024];
             int size = clientSocket.Receive(buffer);
+            if (size <= 0)
+            {
+                return null;
+            }
             ITranslator translator = TranslatorFactory.GetInstance("vi");
             string number = Encoding.UTF8.GetString(buffer).Replace("\0", "");
             string result = translator.Translate(number);
@@ -111,11 +121,18 @@ namespace ServerApp
 
         public void Disconnect()
         {
-            serverSocket.Close();
             foreach (Socket clientSocket in clientSockets)
             {
                 clientSocket.Shutdown(SocketShutdown.Both);
             }
+
+            clientSockets.Clear();
+            clients.Clear();
+            
+            serverSocket.Close();
+            
+            ClientConnectedHandler?.Invoke(clients);
+
             serverSocket = null;
         }
     }

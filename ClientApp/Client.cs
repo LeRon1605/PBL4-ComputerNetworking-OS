@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ClientApp.Models;
+using ClientApp.Repository;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
@@ -10,18 +12,22 @@ namespace ClientApp
     public class Client
     {
         private Socket socket;
+
         public Action<string> OnReceiveMessage;
-        public Client()
+        public Action OnDisconnected;
+        public Client(string ipAddress, int port)
         {
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        }
-
-        public void Connect(string ipAddress, int port)
-        {
-            if (socket != null)
+            socket.Connect(new IPEndPoint(IPAddress.Parse(ipAddress), port));
+            new Task(async () =>
             {
-                socket.Connect(new IPEndPoint(IPAddress.Parse(ipAddress), port));
-            }
+                while (IsConnected())
+                {
+                    await Task.Delay(1000);
+                };
+                Disconnect();
+                OnDisconnected?.Invoke();
+            }).Start();
         }
 
         public void Send(string data)
@@ -30,9 +36,23 @@ namespace ClientApp
             {
                 new Task(() =>
                 {
-                    socket.Send(Encoding.UTF8.GetBytes(data));
-                    string result = ProcessReceiveMessage();
-                    OnReceiveMessage?.Invoke(result);
+                    try
+                    {
+                        socket.Send(Encoding.UTF8.GetBytes(data));
+                        string result = ProcessReceiveMessage();
+                        RequestRepository.GetInstance().Repository.Add(new Request
+                        {
+                            Server = socket.RemoteEndPoint.ToString(),
+                            Number = data,
+                            RequestAt = DateTime.Now,
+                            Response = result
+                        });
+                        OnReceiveMessage?.Invoke(result);
+                    }
+                    catch (SocketException)
+                    {
+                        OnDisconnected?.Invoke();
+                    }
                 }).Start();
             }
         }
@@ -43,11 +63,24 @@ namespace ClientApp
             socket.Receive(buffer);
             return Encoding.UTF8.GetString(buffer);
         }
+        
+        public bool IsConnected()
+        {
+            try
+            {
+                return (socket != null && !((socket.Poll(1000, SelectMode.SelectRead) && (socket.Available == 0)) || !socket.Connected));
+            }
+            catch (ObjectDisposedException)
+            {
+                return false;
+            }
+        }
 
         public void Disconnect()
         {
             if (socket != null)
             {
+                socket.Shutdown(SocketShutdown.Both);
                 socket.Close();
                 socket = null;
             }

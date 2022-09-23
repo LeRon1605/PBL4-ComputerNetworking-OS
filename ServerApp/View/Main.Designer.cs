@@ -50,7 +50,7 @@
             this.btnListen.Name = "btnListen";
             this.btnListen.Size = new System.Drawing.Size(194, 31);
             this.btnListen.TabIndex = 4;
-            this.btnListen.Text = "Listen";
+            this.btnListen.Text = "Start";
             this.btnListen.UseVisualStyleBackColor = true;
             this.btnListen.Click += new System.EventHandler(this.btnListen_Click);
             // 

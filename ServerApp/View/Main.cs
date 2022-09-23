@@ -84,7 +84,7 @@ namespace ServerApp.View
             txtPort.Enabled = true;
             lbState.Text = "Idle";
             lbState.BackColor = Color.IndianRed;
-            btnListen.Text = "Listening";
+            btnListen.Text = "Start";
         }
 
         private void Main_FormClosed(object sender, FormClosedEventArgs e)

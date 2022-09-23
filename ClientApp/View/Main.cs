@@ -1,4 +1,5 @@
 ﻿using ClientApp.Models;
+using ClientApp.Repository;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,6 +19,7 @@ namespace ClientApp.View
         {
             InitializeComponent();
             InitLanguageSelector();
+            DgvHistory.DataSource = new List<Request>();
         }
         private void InitLanguageSelector()
         {
@@ -29,20 +31,19 @@ namespace ClientApp.View
             });
             CbbLanguages.SelectedIndex = 0;
         }
-        private void lbInput_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void lbHistory_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void btnSend_Click(object sender, EventArgs e)
         {
-            string data = txtInput.Text;
-            client.Send(data);
+            if (client != null && client.IsConnected())
+            {
+                string data = txtInput.Text;
+                client.Send(data);
+            }
+            else
+            {
+                MessageBox.Show("You haven't connected to server yet", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ClientDisconnectToServer();
+            }
         }
 
         private void btnConnect_Click(object sender, EventArgs e)
@@ -56,23 +57,21 @@ namespace ClientApp.View
             }
             else
             {
-                client = new Client()
-                {
-                    OnReceiveMessage = receiveData
-                };
                 string ipAddress = txtIpAddress.Text;
                 int port = Convert.ToInt32(txtPort.Text);
                 try
                 {
-                    client.Connect(ipAddress, port);
+                    client = new Client(ipAddress, port)
+                    {
+                        OnReceiveMessage = receiveData,
+                        OnDisconnected = Disconnected
+                    };
                     ClientConnectToServer();
                 }
                 catch (SocketException)
                 {
                     MessageBox.Show("Can't connect to server", "notification", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                }
-                
+                }        
             }
         }
 
@@ -96,15 +95,21 @@ namespace ClientApp.View
 
         private void receiveData(string data) 
         {
-            Invoke(new MethodInvoker(() =>
+            DgvHistory.Invoke(new MethodInvoker(() =>
             {
-                txtResult.Text = data;  
+                txtResult.Text = data;
+                DgvHistory.DataSource = null;
+                DgvHistory.DataSource = RequestRepository.GetInstance().Repository;
             }));
         }
 
-        private void txtIpAddress_TextChanged(object sender, EventArgs e)
+        private void Disconnected()
         {
-
+            Invoke(new MethodInvoker(() =>
+            {
+                MessageBox.Show("Server has been shut down", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ClientDisconnectToServer();
+            }));
         }
     }
 }
