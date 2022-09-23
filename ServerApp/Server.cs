@@ -74,12 +74,9 @@ namespace ServerApp
         {
             while (clientSocket.Connected)
             {
-                byte[] buffer = new byte[1024];
                 try
                 {
-                    int size = clientSocket.Receive(buffer);
-
-                    Response res = ProcessRequest(buffer, clientSocket);
+                    Response res = ProcessRequest(clientSocket);
                     
                     clientSocket.Send(Encoding.UTF8.GetBytes(res.Result));
                     requests.Add(res);
@@ -96,8 +93,10 @@ namespace ServerApp
             }
         }
 
-        public Response ProcessRequest(byte[] buffer, Socket clientSocket)
+        public Response ProcessRequest(Socket clientSocket)
         {
+            byte[] buffer = new byte[1024];
+            int size = clientSocket.Receive(buffer);
             ITranslator translator = TranslatorFactory.GetInstance("vi");
             string number = Encoding.UTF8.GetString(buffer).Replace("\0", "");
             string result = translator.Translate(number);
