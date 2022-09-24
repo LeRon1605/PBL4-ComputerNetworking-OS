@@ -5,14 +5,14 @@ using System.Text;
 
 namespace Models.Entities
 {
-    public class Request
+    public class ResponseLog
     {
-        public string Lang { get; set; }
+        public string Client { get; set; }
         public string Number { get; set; }
+        public string Lang { get; set; }
         public string Text { get; set; }
-        public bool Status { get; set; }
+        public string Status { get; set; }
         public string Exception { get; set; }
-        public string Server { get; set; }
         public DateTime ResponseAt { get; set; }
     }
 }

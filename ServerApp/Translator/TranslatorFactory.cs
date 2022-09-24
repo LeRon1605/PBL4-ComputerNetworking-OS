@@ -18,7 +18,7 @@ namespace ServerApp.Translator
                 }
                 return vietnamTranslator;
             }
-            else if (lang == "eng")
+            else if (lang == "en")
             {
                 if (engLishTranslator == null)
                 {

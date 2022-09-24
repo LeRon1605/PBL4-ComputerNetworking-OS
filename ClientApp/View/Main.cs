@@ -1,5 +1,6 @@
-﻿using ClientApp.Models;
-using ClientApp.Repository;
+﻿using Models.DTO;
+using Models.Entities;
+using Models.Mapper;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,7 +20,12 @@ namespace ClientApp.View
         {
             InitializeComponent();
             InitLanguageSelector();
-            DgvHistory.DataSource = new List<Request>();
+            client = new Client()
+            {
+                OnReceivedMessage = ReceiveDataHandler,
+                OnConnectionStateChanged = DisconnectedHandler
+            };
+            DgvHistory.DataSource = new List<RequestLog>();
         }
         private void InitLanguageSelector()
         {
@@ -34,26 +40,30 @@ namespace ClientApp.View
 
         private void btnSend_Click(object sender, EventArgs e)
         {
-            if (client != null && client.IsConnected())
+            if (client.IsConnected())
             {
                 string data = txtInput.Text;
-                client.Send(data);
+                string lang = (CbbLanguages.SelectedItem as CbbItem).Key;
+                client.Send(new RequestDTO
+                {
+                    Number = data,
+                    Lang = lang
+                });
             }
             else
             {
                 MessageBox.Show("You haven't connected to server yet", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                ClientDisconnectToServer();
+                ConnectionStateChanged(false);
             }
         }
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
             
-            if(client != null)
+            if(client.IsConnected())
             {
                 client.Disconnect();
-                client = null;
-                ClientDisconnectToServer();
+                ConnectionStateChanged(false);
             }
             else
             {
@@ -61,12 +71,8 @@ namespace ClientApp.View
                 int port = Convert.ToInt32(txtPort.Text);
                 try
                 {
-                    client = new Client(ipAddress, port)
-                    {
-                        OnReceiveMessage = receiveData,
-                        OnDisconnected = Disconnected
-                    };
-                    ClientConnectToServer();
+                    client.Connect(ipAddress, port);
+                    ConnectionStateChanged(true);
                 }
                 catch (SocketException)
                 {
@@ -75,40 +81,31 @@ namespace ClientApp.View
             }
         }
 
-        private void ClientConnectToServer()
+        private void ConnectionStateChanged(bool state)
         {
-            txtIpAddress.Enabled = false;
-            txtPort.Enabled = false;
-            lbConnecting.Text = "Connecting";
-            lbConnecting.BackColor = Color.Green;
-            btnConnect.Text = "Disconnect";
+            txtIpAddress.Enabled = !state;
+            txtPort.Enabled = !state;
+            lbConnecting.Text = state ? "Connecting" : "Idle";
+            lbConnecting.BackColor = state ? Color.Green : Color.IndianRed;
+            btnConnect.Text = state ? "Disconnect" : "Connect";
         }
 
-        private void ClientDisconnectToServer()
+        private void ReceiveDataHandler(ResponseDTO response) 
         {
-            txtIpAddress.Enabled = true;
-            txtPort.Enabled = true;
-            lbConnecting.Text = "Idle";
-            lbConnecting.BackColor = Color.IndianRed;
-            btnConnect.Text = "Connect";
-        }
-
-        private void receiveData(string data) 
-        {
-            DgvHistory.Invoke(new MethodInvoker(() =>
+            Invoke(new MethodInvoker(() =>
             {
-                txtResult.Text = data;
+                txtResult.Text = response.Text;
                 DgvHistory.DataSource = null;
-                DgvHistory.DataSource = RequestRepository.GetInstance().Repository;
+                DgvHistory.DataSource = Repository.GetInstance().Requests;
             }));
         }
 
-        private void Disconnected()
+        private void DisconnectedHandler()
         {
             Invoke(new MethodInvoker(() =>
             {
                 MessageBox.Show("Server has been shut down", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                ClientDisconnectToServer();
+                ConnectionStateChanged(false);
             }));
         }
     }

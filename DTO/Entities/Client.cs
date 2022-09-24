@@ -7,5 +7,6 @@ namespace Models.Entities
     public class Client
     {
         public string IP { get; set; }
+        public DateTime ConnectedAt { get; set; }
     }
 }

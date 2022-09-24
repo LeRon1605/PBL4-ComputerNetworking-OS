@@ -1,5 +1,6 @@
-﻿using ClientApp.Models;
-using ClientApp.Repository;
+﻿using Models.DTO;
+using Models.Entities;
+using Models.Mapper;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -13,24 +14,28 @@ namespace ClientApp
     {
         private Socket socket;
 
-        public Action<string> OnReceiveMessage;
-        public Action OnDisconnected;
-        public Client(string ipAddress, int port)
+        public Action<ResponseDTO> OnReceivedMessage;
+        public Action OnConnectionStateChanged;
+
+        public void Connect(string ipAddress, int port)
         {
-            socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            socket.Connect(new IPEndPoint(IPAddress.Parse(ipAddress), port));
-            new Task(async () =>
+            if (!IsConnected())
             {
-                while (IsConnected())
+                socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                socket.Connect(new IPEndPoint(IPAddress.Parse(ipAddress), port));
+                new Task(async () =>
                 {
-                    await Task.Delay(1000);
-                };
-                Disconnect();
-                OnDisconnected?.Invoke();
-            }).Start();
+                    while (IsConnected())
+                    {
+                        await Task.Delay(1000);
+                    };
+                    Disconnect();
+                    OnConnectionStateChanged?.Invoke();
+                }).Start();
+            }
         }
 
-        public void Send(string data)
+        public void Send(RequestDTO request)
         {
             if (socket != null)
             {
@@ -38,30 +43,25 @@ namespace ClientApp
                 {
                     try
                     {
-                        socket.Send(Encoding.UTF8.GetBytes(data));
-                        string result = ProcessReceiveMessage();
-                        RequestRepository.GetInstance().Repository.Add(new Request
-                        {
-                            Server = socket.RemoteEndPoint.ToString(),
-                            Number = data,
-                            RequestAt = DateTime.Now,
-                            Response = result
-                        });
-                        OnReceiveMessage?.Invoke(result);
+                        socket.Send(Encoding.UTF8.GetBytes(request.Serialize()));
+                        ResponseDTO res = ProcessReceiveMessage();
+                        Repository.GetInstance().Requests.Add(Mapper.MapRequest(res));
+                        OnReceivedMessage?.Invoke(res);
                     }
                     catch (SocketException)
                     {
-                        OnDisconnected?.Invoke();
+                        OnConnectionStateChanged?.Invoke();
                     }
                 }).Start();
             }
         }
 
-        public string ProcessReceiveMessage()
+        public ResponseDTO ProcessReceiveMessage()
         {
             byte[] buffer = new byte[256];
             socket.Receive(buffer);
-            return Encoding.UTF8.GetString(buffer);
+            ResponseDTO res = ResponseDTO.Deserialize(Encoding.UTF8.GetString(buffer).Replace("\0", ""));
+            return res;
         }
         
         public bool IsConnected()

@@ -17,7 +17,7 @@ namespace ServerApp
 
         private Repository Repository;
 
-        public Action<List<Response>> OnReceiveData;
+        public Action<List<ResponseLog>> OnReceiveData;
         public Action<List<Client>> OnClientConnectionStateChanged;
 
         public Server()
@@ -27,27 +27,29 @@ namespace ServerApp
 
         public void Listen(string ipAddress, int port)
         {
-            Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            Socket.Bind(new IPEndPoint(IPAddress.Parse(ipAddress), port));
-            Socket.Listen(100);
-            new Task(() =>
+            if (!IsListening())
             {
-                while (true)
+                Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                Socket.Bind(new IPEndPoint(IPAddress.Parse(ipAddress), port));
+                Socket.Listen(100);
+                new Task(() =>
                 {
-                    try
+                    while (true)
                     {
-                        Socket clientSocket = Socket.Accept();
-                        Repository.AddClient(clientSocket);
-                        OnClientConnectionStateChanged?.Invoke(Repository.Clients);
-                        Task task = new Task(() => Receive(clientSocket));
-                        task.Start();
+                        try
+                        {
+                            Socket clientSocket = Socket.Accept();
+                            Repository.AddClient(clientSocket);
+                            OnClientConnectionStateChanged?.Invoke(Repository.Clients);
+                            new Task(() => Receive(clientSocket)).Start();
+                        }
+                        catch (SocketException)
+                        {
+                            break;
+                        }
                     }
-                    catch (SocketException)
-                    {
-                        break;
-                    }
-                }
-            }).Start();
+                }).Start();
+            }
         }
 
         public void Receive(Socket clientSocket)
@@ -56,10 +58,11 @@ namespace ServerApp
             {
                 try
                 {
-                    Response res = ProcessRequest(clientSocket);
+                    ResponseDTO res = ProcessRequest(clientSocket); // throw Exception if client disconnect
                     if (res != null)
                     {
-                        clientSocket.Send(Encoding.UTF8.GetBytes(Mapper.MapRequest(res).Serialize()));
+                        clientSocket.Send(Encoding.UTF8.GetBytes(res.Serialize()));
+                        Repository.Responses.Add(Mapper.MapResponse(res));
                         OnReceiveData?.Invoke(Repository.Responses);
                     }
                 }
@@ -74,7 +77,7 @@ namespace ServerApp
             clientSocket.Close();
         }
 
-        public Response ProcessRequest(Socket clientSocket)
+        public ResponseDTO ProcessRequest(Socket clientSocket)
         {
             byte[] buffer = new byte[1024];
             int size = clientSocket.Receive(buffer);
@@ -84,14 +87,15 @@ namespace ServerApp
             }
             RequestDTO request = RequestDTO.Deserialize(Encoding.UTF8.GetString(buffer).Replace("\0", ""));
             string result = TranslatorFactory.GetInstance(request.Lang).Translate(request.Number);
-            return new Response
+            return new ResponseDTO
             {
                 Lang = request.Lang,
                 Number = request.Number,
                 Text = result,
                 Status = (result != null),
-                Exception = null,
+                Exception = (result != null) ? "" : "Not a number",
                 Client = clientSocket.RemoteEndPoint.ToString(),
+                Server = Socket.LocalEndPoint.ToString(),
                 ResponseAt = DateTime.Now
             };
         }
@@ -121,6 +125,7 @@ namespace ServerApp
             }
 
             Repository.Clear();
+            OnReceiveData?.Invoke(Repository.Responses);
             OnClientConnectionStateChanged?.Invoke(Repository.Clients);
         }
     }

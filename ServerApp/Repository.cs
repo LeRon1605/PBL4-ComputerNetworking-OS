@@ -11,20 +11,21 @@ namespace ServerApp
     {
         public List<Client> Clients { get; set; }
         public List<Socket> ClientSockets { get; set; }
-        public List<Response> Responses { get; set; }
+        public List<ResponseLog> Responses { get; set; }
 
         public Repository()
         {
             Clients = new List<Client>();
             ClientSockets = new List<Socket>();
-            Responses = new List<Response>();
+            Responses = new List<ResponseLog>();
         }
 
         public void AddClient(Socket socket)
         {
             Clients.Add(new Client
             {
-                IP = socket.RemoteEndPoint.ToString()
+                IP = socket.RemoteEndPoint.ToString(),
+                ConnectedAt = DateTime.Now
             });
             ClientSockets.Add(socket);
         }

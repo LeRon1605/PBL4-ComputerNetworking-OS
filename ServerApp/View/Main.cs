@@ -18,7 +18,7 @@ namespace ServerApp.View
         public Main()
         {
             InitializeComponent();
-            DgvHistory.DataSource = new List<Response>();
+            DgvHistory.DataSource = new List<ResponseLog>();
             dgvClient.DataSource = new List<Client>();
             server = new Server()
             {
@@ -59,7 +59,7 @@ namespace ServerApp.View
             }));
         }
 
-        public void UpdateRequest(List<Response> requests)
+        public void UpdateRequest(List<ResponseLog> requests)
         {
             DgvHistory.Invoke(new MethodInvoker(delegate
             {
