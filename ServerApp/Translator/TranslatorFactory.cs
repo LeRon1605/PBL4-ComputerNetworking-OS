@@ -8,6 +8,7 @@ namespace ServerApp.Translator
     {
         private static ITranslator vietnamTranslator;
         private static ITranslator engLishTranslator;
+        private static ITranslator spanishTranslator;
         public static ITranslator GetInstance(string lang)
         {
             if (lang == "vi")
@@ -25,6 +26,14 @@ namespace ServerApp.Translator
                     engLishTranslator = new EnglishTranslator();
                 }
                 return engLishTranslator;
+            }
+            else if (lang == "sp")
+            {
+                if (spanishTranslator == null)
+                {
+                    spanishTranslator = new SpanishTranslator();
+                }
+                return spanishTranslator;
             }
             return null;
         }
