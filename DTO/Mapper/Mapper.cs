@@ -47,6 +47,10 @@ namespace Models.Mapper
             {
                 return "English";
             }
+            else if (languageCode == "sp")
+            {
+                return "Español";
+            }
             return null;
         }
     }

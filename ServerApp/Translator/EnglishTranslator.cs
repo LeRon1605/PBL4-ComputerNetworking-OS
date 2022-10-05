@@ -12,7 +12,7 @@ namespace ServerApp.Translator
 
         private static readonly string[] units = { "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"};  
         
-        private static readonly string[] denom = { "", "thousand", "million", "billion", "trillion", "quadrillion", "quintillion", 
+        private static readonly string[] denom = { "", "" , "thousand", "million", "billion", "trillion", "quadrillion", "quintillion", 
         "sextillion", "septillion", "octillion", "nonillion", "decillion", "undecillion", "duodecillion", "tredecillion", 
         "quattuordecillion", "sexdecillion", "septendecillion", "octodecillion", "novemdecillion", "vigintillion" };
         
@@ -36,7 +36,7 @@ namespace ServerApp.Translator
                     return unit;
                 }
             }
-            throw new Exception();
+            return "";
         }
         public string convert_xxx(string number)
         {
@@ -82,14 +82,13 @@ namespace ServerApp.Translator
             }
             for (int v = 0; v < denom.Length; v++)
             {
-                int didx = v - 1;
                 double dval = Convert.ToDouble(Math.Pow(1000, v));
                 if (dval > _number)
                 {
-                    double mod = (double)(Math.Pow(1000, didx));
+                    double mod = (double)(Math.Pow(1000, v - 1));
                     int l = Convert.ToInt32(Math.Floor(_number / mod));
                     double r = _number - (l * mod);
-                    result = convert_xxx(l.ToString()) + " " + denom[didx];
+                    result = convert_xxx(l.ToString()) + " " + denom[v];
                     if (r > 0)
                     {
                         result = result + ", " + Translate(r.ToString());
@@ -97,7 +96,7 @@ namespace ServerApp.Translator
                     return char.ToUpper(result[0]) + result.Substring(1);
                 }
             }
-            throw new Exception();
+            return "";
         }
     }
 }
