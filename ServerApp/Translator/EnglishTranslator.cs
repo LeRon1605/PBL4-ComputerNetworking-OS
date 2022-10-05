@@ -60,6 +60,14 @@ namespace ServerApp.Translator
         }
         public string Translate(string number)
         {
+            for (int i = 0; i < number.Length; i++)
+            {
+                int j = number.Length - i - 1;
+                if (number[j] < '0' || number[j] > '9')
+                {
+                    return null;
+                }
+            }
             string result = "";
 
             if (number[0] == '-')
