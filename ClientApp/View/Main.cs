@@ -33,7 +33,7 @@ namespace ClientApp.View
             {
                new CbbItem { Key = "vi", Text = "Việt Nam" },
                new CbbItem { Key = "en", Text = "English" },
-               new CbbItem { Key = "sp", Text = "Spain" },
+               new CbbItem { Key = "sp", Text = "Español" },
             });
             CbbLanguages.SelectedIndex = 0;
         }

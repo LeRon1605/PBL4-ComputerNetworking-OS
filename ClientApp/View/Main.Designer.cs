@@ -55,6 +55,8 @@
             // 
             this.txtResult.Location = new System.Drawing.Point(115, 117);
             this.txtResult.Name = "txtResult";
+            this.txtResult.ReadOnly = true;
+            this.txtResult.Size = new System.Drawing.Size(430, 75);
             this.txtResult.Size = new System.Drawing.Size(806, 57);
             this.txtResult.TabIndex = 17;
             this.txtResult.Text = "";
