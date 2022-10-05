@@ -55,7 +55,7 @@
             // 
             this.txtResult.Location = new System.Drawing.Point(115, 117);
             this.txtResult.Name = "txtResult";
-            this.txtResult.Size = new System.Drawing.Size(377, 57);
+            this.txtResult.Size = new System.Drawing.Size(806, 57);
             this.txtResult.TabIndex = 17;
             this.txtResult.Text = "";
             // 
@@ -71,7 +71,7 @@
             // 
             // btnSend
             // 
-            this.btnSend.Location = new System.Drawing.Point(402, 190);
+            this.btnSend.Location = new System.Drawing.Point(831, 190);
             this.btnSend.Name = "btnSend";
             this.btnSend.Size = new System.Drawing.Size(90, 28);
             this.btnSend.TabIndex = 13;
@@ -83,7 +83,7 @@
             // 
             this.txtInput.Location = new System.Drawing.Point(115, 29);
             this.txtInput.Name = "txtInput";
-            this.txtInput.Size = new System.Drawing.Size(377, 23);
+            this.txtInput.Size = new System.Drawing.Size(806, 23);
             this.txtInput.TabIndex = 12;
             // 
             // CbbLanguages
@@ -91,7 +91,7 @@
             this.CbbLanguages.FormattingEnabled = true;
             this.CbbLanguages.Location = new System.Drawing.Point(114, 70);
             this.CbbLanguages.Name = "CbbLanguages";
-            this.CbbLanguages.Size = new System.Drawing.Size(378, 23);
+            this.CbbLanguages.Size = new System.Drawing.Size(807, 23);
             this.CbbLanguages.TabIndex = 11;
             // 
             // lbInput
@@ -180,7 +180,7 @@
             this.GbConnect.Controls.Add(this.txtIpAddress);
             this.GbConnect.Controls.Add(this.lbPort);
             this.GbConnect.Controls.Add(this.txtPort);
-            this.GbConnect.Location = new System.Drawing.Point(516, 11);
+            this.GbConnect.Location = new System.Drawing.Point(957, 11);
             this.GbConnect.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.GbConnect.Name = "GbConnect";
             this.GbConnect.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -202,7 +202,7 @@
             this.GbInput.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.GbInput.Name = "GbInput";
             this.GbInput.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.GbInput.Size = new System.Drawing.Size(498, 240);
+            this.GbInput.Size = new System.Drawing.Size(927, 240);
             this.GbInput.TabIndex = 25;
             this.GbInput.TabStop = false;
             this.GbInput.Text = "Input";
@@ -212,7 +212,7 @@
             this.groupBox1.Controls.Add(this.DgvHistory);
             this.groupBox1.Location = new System.Drawing.Point(12, 279);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(665, 245);
+            this.groupBox1.Size = new System.Drawing.Size(1112, 245);
             this.groupBox1.TabIndex = 26;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Requests";
@@ -224,14 +224,14 @@
             this.DgvHistory.Location = new System.Drawing.Point(6, 22);
             this.DgvHistory.Name = "DgvHistory";
             this.DgvHistory.RowTemplate.Height = 25;
-            this.DgvHistory.Size = new System.Drawing.Size(653, 217);
+            this.DgvHistory.Size = new System.Drawing.Size(1100, 217);
             this.DgvHistory.TabIndex = 0;
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(688, 536);
+            this.ClientSize = new System.Drawing.Size(1136, 533);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.GbInput);
             this.Controls.Add(this.GbConnect);

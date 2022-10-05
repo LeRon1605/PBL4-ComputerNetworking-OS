@@ -61,6 +61,7 @@ namespace ServerApp
                     ResponseDTO res = ProcessRequest(clientSocket); // throw Exception if client disconnect
                     if (res != null)
                     {
+                        string m = res.Serialize();
                         clientSocket.Send(Encoding.UTF8.GetBytes(res.Serialize()));
                         Repository.Responses.Add(Mapper.MapResponse(res));
                         OnReceiveData?.Invoke(Repository.Responses);
