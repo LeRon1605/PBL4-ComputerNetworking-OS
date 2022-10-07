@@ -6,7 +6,7 @@ namespace ServerApp.Translator
 {
     public class SpanishTranslator : ITranslator
     {
-        private static readonly string[] digits = { "cero", "uno", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho",
+        private static readonly string[] digits = { "cero", "un", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho",
         "nueve", "diez","once", "doce", "trece", "catorce", "quince", "dieciséis", "diecisiete", "dieciocho", "diecinueve", "veinte",
         "veintiuno", "veintidós", "veintitrés", "veinticuatro", "veinticinco", "veintiséis", "veintisiete", "veintiocho", "veintinueve"};
 
@@ -15,9 +15,12 @@ namespace ServerApp.Translator
         private static readonly string[] units = { "", "cien", "doscientos", "trescientos", "cuatrocientos", "quinientos", "seiscientos",
         "setecientos", "ochocientos", "novecientos" };
 
-        private static readonly string[] denom = { "", "mil",  "millones", "", "billones", "", "trillones" };
+        private static readonly string[] denomSingluler = {"", "" ,"millón", "", "billón", "", "trillón", "", "cuatrillón", "", "quintillón",
+        "", "sextillón", "", "septillón", "", "octillón"};
 
-        private static readonly string[] denomSingluler = {"", "" ,"millón", "", "billón", "", "trillón" };
+        private static readonly string[] denom = { "", "mil",  "millones", "", "billones", "", "trillones", "", "cuatrillones", "", "quintillones",
+        "", "sextillones", "", "septillones", "", "octillones" };
+
         public string convert_xx(string number)
         {
             double _number = Convert.ToDouble(number);
@@ -63,29 +66,13 @@ namespace ServerApp.Translator
             }
             if (mod > 0)
             {
-                digits[1] = "un";
                 result = result + convert_xx(mod.ToString());
             }
             return result;
         }
-        public string Translate(string number)
+        public string TranslateNumber(string number)
         {
-            for (int i = 0; i < number.Length; i++)
-            {
-                int j = number.Length - i - 1;
-                if (number[j] < '0' || number[j] > '9')
-                {
-                    return null;
-                }
-            } 
             string result = "";
-
-            if (number[0] == '-')
-            {
-                number = number.Substring(1);
-                return "Menos " + Translate(number);
-            }
-
             double _number = Convert.ToDouble(number);
 
             if (_number < 100)
@@ -109,7 +96,6 @@ namespace ServerApp.Translator
                         double mod = (double)(Math.Pow(1000, didx));
                         int l = Convert.ToInt32(Math.Floor(_number / mod));
                         double r = _number - (l * mod);
-                        digits[1] = "un";
 
                         if (l == 1)
                         {
@@ -121,7 +107,7 @@ namespace ServerApp.Translator
                         }
                         if (r > 0)
                         {
-                            result = result + " " + Translate(r.ToString());
+                            result = result + " " + TranslateNumber(r.ToString());
                         }
                         return char.ToUpper(result[0]) + result.Substring(1);
                     }
@@ -138,7 +124,6 @@ namespace ServerApp.Translator
                         double mod = (double)(Math.Pow(1000, didx));
                         int l = Convert.ToInt32(Math.Floor(_number / mod));
                         double r = _number - (l * mod);
-                        digits[1] = "un";
 
                         if ( l == 1)
                         {
@@ -152,7 +137,7 @@ namespace ServerApp.Translator
                         }
                         if (r > 0)
                         {
-                            result = result + " " + Translate(r.ToString());
+                            result = result + " " + TranslateNumber(r.ToString());
                         }
                         return char.ToUpper(result[0]) + result.Substring(1);
                     }
@@ -166,16 +151,69 @@ namespace ServerApp.Translator
                         double mod = (double)(Math.Pow(1000, didx));
                         int l = Convert.ToInt32(Math.Floor(_number / mod));
                         double r = _number - (l * mod);
-                        result = Translate(l.ToString()) + " " + denom[didx];
+                        result = TranslateNumber(l.ToString()) + " " + denom[didx];
                         if (r > 0)
                         {
-                            result = result + " " + Translate(r.ToString());
+                            result = result + " " + TranslateNumber(r.ToString());
                         }
                         return char.ToUpper(result[0]) + result.Substring(1);
                     }
                 }
             }
             return "";
+        }
+        public string Translate(string number)
+        {
+            number = number.Trim();
+            // Empty string
+            if (string.IsNullOrEmpty(number))
+            {
+                return null;
+            }
+
+            number = number.TrimStart('0').PadLeft(1, '0');
+
+            if (number[0] == '-')
+            {
+                number = number.Substring(1);
+                return "Menos " + Translate(number);
+            }
+
+            List<string> numberSplit = new List<string>();
+            int count = 0;
+            for (int i = number.Length - 1; i >= 0; i--)
+            {
+                if (number[i] < '0' || number[i] > '9')
+                {
+                    return null;
+                }
+                count++;
+                if (count % 6 == 0 || i == 0)
+                {
+                    string subNumber = number.Substring(i, count);
+                    for (int j = 0; j < numberSplit.Count; j++)
+                    {
+                        subNumber += "000000";
+                    }
+                    numberSplit.Add(subNumber);
+                    count = 0;
+                }
+            }
+
+            string result = "";
+
+            for (int i = numberSplit.Count - 1; i >= 0; i--)
+            {
+                if (i != 0)
+                {
+                    result += TranslateNumber(numberSplit[i]) + ", ";
+                }
+                else
+                {
+                    result += TranslateNumber(numberSplit[i]);
+                }
+            }
+            return char.ToUpper(result[0]) + result.Substring(1);
         }
     }
 }

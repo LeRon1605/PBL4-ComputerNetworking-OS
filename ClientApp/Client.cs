@@ -58,7 +58,7 @@ namespace ClientApp
 
         public ResponseDTO ProcessReceiveMessage()
         {
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[16384];
             socket.Receive(buffer);
             string d = Encoding.UTF8.GetString(buffer).Replace("\0", "");
             ResponseDTO res = ResponseDTO.Deserialize(Encoding.UTF8.GetString(buffer).Replace("\0", ""));

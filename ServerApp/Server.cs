@@ -80,7 +80,7 @@ namespace ServerApp
 
         public ResponseDTO ProcessRequest(Socket clientSocket)
         {
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[16384];
             int size = clientSocket.Receive(buffer);
             if (size <= 0)
             {

@@ -26,11 +26,11 @@ namespace UnitTest.TranslatorTest
         }
 
         [Theory]
-        [InlineData("1234", "One thousand two hundred and thirty four")]
-        [InlineData("1200200", "One million two hundred thousand and two hundred")]
-        [InlineData("1234567891", "One billion two hundred thirty four million five hundred sixty seven thousand and eight hundred ninety one")]
-        [InlineData("1200000", "One million and two hundred thousand")]
-        [InlineData("1000002", "One million and two")]
+        [InlineData("1234", "One thousand, Two hundred thirty-four")]
+        [InlineData("1200200", "One million, Two hundred thousand, Two hundred")]
+        [InlineData("1234567891", "One billion, Two hundred, Thirty-four million, Five hundred sixty-seven thousand, Eight hundred ninety-one")]
+        [InlineData("1200000", "One million, Two hundred thousand")]
+        [InlineData("1000002", "One million, Two")]
         public void GivenLargeNumber_WhenTranslate_ThenShouldWork(string number, string expected)
         {
             string actual = translator.Translate(number);
@@ -41,7 +41,7 @@ namespace UnitTest.TranslatorTest
         [InlineData("0", "Zero")]
         [InlineData("01", "One")]
         [InlineData("010", "Ten")]
-        [InlineData("0000123456", "One hundred twenty three thousand and four hundred fifty six")]
+        [InlineData("0000123456", "One hundred twenty-three thousand, Four hundred fifty-six")]
         public void GivenLeadZeroNumber_WhenTranslate_ThenShouldWork(string number, string expected)
         {
             string actual = translator.Translate(number);
@@ -55,8 +55,8 @@ namespace UnitTest.TranslatorTest
         [InlineData("10", "Ten")]
         [InlineData("11", "Eleven")]
         [InlineData("15", "fifteen")]
-        [InlineData("125", "One hundred and twenty five")]
-        [InlineData("101", "One hundred and one")]
+        [InlineData("125", "One hundred twenty-five")]
+        [InlineData("101", "One hundred one")]
         public void GivenSimpleNumber_WhenTranslate_ThenShouldWork(string number, string expected)
         {
             string actual = translator.Translate(number);
