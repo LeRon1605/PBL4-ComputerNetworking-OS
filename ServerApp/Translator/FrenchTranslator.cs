@@ -1,29 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Text;
 
 namespace ServerApp.Translator
 {
-    public class EnglishTranslator : ITranslator
+    public class FrenchTranslator : ITranslator
     {
-        private static readonly string[] digits = { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight",
-        "nine", "ten","eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"};
+        private static readonly string[] digits = { "zéro", "un", "deux", "trois", "quatre", "cinq", "six", "sept", "huit",
+        "neuf", "dix","onze ", "douze", "treize", "quatorze", "quinze", "seize", "dix-sept", "dix-huit", "dix-neuf"};
 
-        private static readonly string[] dozens = { "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"};  
-        
-        private static readonly string[] denom = { "", "" , "thousand", "million", "billion", "trillion", "quadrillion", "quintillion", 
-        "sextillion", "septillion", "octillion", "nonillion", "decillion", "undecillion", "duodecillion", "tredecillion", 
-        "quattuordecillion", "quindecillion", "sexdecillion", "septendecillion", "octodecillion", "novemdecillion", "vigintillion", "unvigintillion", 
-        "duovigintillion", "trevigintillion", "quattuorvigintillion", "quinvigintillion", "sexvigintillion", "septenvigintillion", "octovigintillion", 
-        "novemvigintillion", "trigintillion", "untrigintillion", "duotrigintillion", "tretrigintillion", "quattuortrigintillion"};
-        
+        private static readonly string[] dozens = { "vingt", "trente", "quarante", "cinquante", "soixante", "soixante-dix", "quatre-vingts", "quatre-vingt-dix" };
+
+        private static readonly string[] denom = { "", "" , "mille", "million", "milliard", "billion", "billiard", "trillion",
+        "trilliard", "quadrillion", "quadrilliard", "quintillion", "quintilliard", "sextillion", "sextilliard", "septillion",
+        "septilliard", "octillion", "octilliard", "nonillion", "nonilliard", "décillion", "décilliard", "undecillion", "undecilliard",
+        "duodecillion", "duodecilliard", "tredecillion", "tredecilliard", "quattuordecillion", "quattuordecilliard", "quindecillion", "quindecilliard",
+        "sexdecillion", "sexdecilliard", "septdecillion", "septdecilliard"};
         public string convert_xx(string number)
         {
             double _number = Convert.ToDouble(number);
             if (_number < 20)
             {
-                return digits[Convert.ToInt32(_number)];    
+                return digits[Convert.ToInt32(_number)];
             }
             for (int i = 0; i < dozens.Length; i++)
             {
@@ -48,10 +46,10 @@ namespace ServerApp.Translator
             int mod = Convert.ToInt32(_number % 100);
             if (rem > 0)
             {
-                result = digits[rem] + " hundred";
+                result = digits[rem] + " cent";
                 if (mod > 0)
                 {
-                    result = result + " and ";
+                    result = result + " ";
                 }
             }
             if (mod > 0)
@@ -60,9 +58,10 @@ namespace ServerApp.Translator
             }
             return result;
         }
+
         public string TranslateNumber(string number)
         {
-            
+
             string result = "";
 
             double _number = Convert.ToDouble(number);
@@ -112,7 +111,7 @@ namespace ServerApp.Translator
             if (number[0] == '-')
             {
                 number = number.Substring(1);
-                return "Minus " + Translate(number);
+                return "Moins " + Translate(number);
             }
 
             List<string> numberSplit = new List<string>();
@@ -140,7 +139,7 @@ namespace ServerApp.Translator
 
             for (int i = numberSplit.Count - 1; i >= 0; i--)
             {
-                if(i != 0)
+                if (i != 0)
                 {
                     result += TranslateNumber(numberSplit[i]) + ", ";
                 }
