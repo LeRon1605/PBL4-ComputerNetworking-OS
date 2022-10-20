@@ -41,15 +41,19 @@ namespace Models.Mapper
         {
             if (languageCode == "vi")
             {
-                return "Việt Nam";
+                return "Tiếng Việt";
             }
             else if(languageCode == "en")
             {
-                return "English";
+                return "Tiếng Anh";
             }
             else if (languageCode == "sp")
             {
-                return "Español";
+                return "Tiếng Tây Ban Nha";
+            }
+            else if (languageCode == "fr")
+            {
+                return "Tiếng Pháp";
             }
             return null;
         }

@@ -31,10 +31,10 @@ namespace ClientApp.View
         {
             CbbLanguages.Items.AddRange(new CbbItem[]
             {
-               new CbbItem { Key = "vi", Text = "Việt Nam" },
-               new CbbItem { Key = "en", Text = "English" },
-               new CbbItem { Key = "sp", Text = "Español" },
-               new CbbItem { Key = "fr", Text = "Français"},
+               new CbbItem { Key = "vi", Text = "Tiếng Việt" },
+               new CbbItem { Key = "en", Text = "Tiếng Anh" },
+               new CbbItem { Key = "sp", Text = "Tiếng Tây Ban Nha" },
+               new CbbItem { Key = "fr", Text = "Tiếng Pháp"},
             });
             CbbLanguages.SelectedIndex = 0;
         }
