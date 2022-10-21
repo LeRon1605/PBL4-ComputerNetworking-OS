@@ -55,18 +55,27 @@ namespace ServerApp.Translator
                                 dozen = dozens[i - 1];
                                 return dozen + "-" + digits[(_number % 10) + 10];
                             }
-
-                        }
-                        if(_number % 10 == 1)
-                        {
-                            return dozen + " et " + digits[_number % 10];
                         }
                         else
                         {
-                            return dozen + "-" + digits[_number % 10];
-                        }   
+                            if (_number % 10 == 1)
+                            {
+                                return dozen + " et " + digits[_number % 10];
+                            }
+                            else
+                            {
+                                return dozen + "-" + digits[_number % 10];
+                            }
+                        }
                     }
-                    return dozen;
+                    else
+                    {
+                        if(_number == 80)
+                        {
+                            dozen = "quatre-vingts";
+                        }
+                        return dozen;
+                    }
                 }
             }
             return "";
@@ -85,7 +94,14 @@ namespace ServerApp.Translator
                 }
                 else
                 {
-                    result = digits[rem] + " cent";
+                    if (mod == 0)
+                    {
+                        result = digits[rem] + " cents";
+                    }
+                    else
+                    {
+                        result = digits[rem] + " cent";
+                    }
                 }
                 if (mod > 0)
                 {
@@ -173,13 +189,9 @@ namespace ServerApp.Translator
                     }
                     else
                     {
-
-                    }
-                    {
                         if(HandlerNumber(numberSplit[i]) == "Un")
                         {
                             result += units[i] + ", ";
-
                         }
                         else
                         {
@@ -198,8 +210,6 @@ namespace ServerApp.Translator
                         if (HandlerNumber(numberSplit[i]) == "Un")
                         {
                             result += HandlerNumber(numberSplit[i]) + " " + units[i] + ", ";
-
-
                         }
                         else
                         {

@@ -6,19 +6,19 @@ namespace ServerApp.Translator
 {
     public class SpanishTranslator : ITranslator
     {
-        private static readonly string[] digits = { "cero", "un", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho",
+        private static readonly string[] digits = {"cero", "un", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho",
         "nueve", "diez","once", "doce", "trece", "catorce", "quince", "dieciséis", "diecisiete", "dieciocho", "diecinueve", "veinte",
         "veintiuno", "veintidós", "veintitrés", "veinticuatro", "veinticinco", "veintiséis", "veintisiete", "veintiocho", "veintinueve"};
 
-        private static readonly string[] dozens = { "treinta", "cuarenta", "cincuenta", "sesenta", "setenta", "ochenta", "noventa" };
+        private static readonly string[] dozens = {"treinta", "cuarenta", "cincuenta", "sesenta", "setenta", "ochenta", "noventa"};
 
-        private static readonly string[] units = { "", "cien", "doscientos", "trescientos", "cuatrocientos", "quinientos", "seiscientos",
-        "setecientos", "ochocientos", "novecientos" };
+        private static readonly string[] hundreds = {"", "cien", "doscientos", "trescientos", "cuatrocientos", "quinientos", "seiscientos",
+        "setecientos", "ochocientos", "novecientos"};
 
-        private static readonly string[] denomSingluler = {"", "" ,"millón", "", "billón", "", "trillón", "", "cuatrillón", "", "quintillón",
+        private static readonly string[] unitsSingluler = {"", "" ,"millón", "", "billón", "", "trillón", "", "cuatrillón", "", "quintillón",
         "", "sextillón", "", "septillón", "", "octillón"};
 
-        private static readonly string[] denom = { "", "mil",  "millones", "", "billones", "", "trillones", "", "cuatrillones", "", "quintillones",
+        private static readonly string[] units = {"", "mil",  "millones", "", "billones", "", "trillones", "", "cuatrillones", "", "quintillones",
         "", "sextillones", "", "septillones", "", "octillones" };
 
         public string convert_xx(string number)
@@ -53,11 +53,11 @@ namespace ServerApp.Translator
             {
                 if (rem == 1 && mod > 0)
                 {
-                    result = units[rem] + "to";
+                    result = hundreds[rem] + "to";
                 }
                 else
                 {
-                    result = units[rem];
+                    result = hundreds[rem];
                 }
                 if (mod > 0)
                 {
@@ -87,7 +87,7 @@ namespace ServerApp.Translator
             }
             if (_number < 1000000)
             {
-                for (int v = 0; v < denom.Length; v++)
+                for (int v = 0; v < units.Length; v++)
                 {
                     int didx = v - 1;
                     double dval = Convert.ToDouble(Math.Pow(1000, v));
@@ -99,11 +99,11 @@ namespace ServerApp.Translator
 
                         if (l == 1)
                         {
-                            result = denom[didx];
+                            result = units[didx];
                         }
                         else
                         {
-                            result = convert_xxx(l.ToString()) + " " + denom[didx];
+                            result = convert_xxx(l.ToString()) + " " + units[didx];
                         }
                         if (r > 0)
                         {
@@ -113,7 +113,7 @@ namespace ServerApp.Translator
                     }
                 }
             }
-            for (int v = 0; v < denom.Length; v++)
+            for (int v = 0; v < units.Length; v++)
             {
                 if( v % 2 == 1 )
                 {
@@ -127,13 +127,11 @@ namespace ServerApp.Translator
 
                         if ( l == 1)
                         {
-                            result = digits[1] + " "  + denomSingluler[didx];
-
+                            result = digits[1] + " "  + unitsSingluler[didx];
                         }
                         else
                         {
-                            result = convert_xxx(l.ToString()) + " " + denom[didx];
-
+                            result = convert_xxx(l.ToString()) + " " + units[didx];
                         }
                         if (r > 0)
                         {
@@ -151,7 +149,7 @@ namespace ServerApp.Translator
                         double mod = (double)(Math.Pow(1000, didx));
                         int l = Convert.ToInt32(Math.Floor(_number / mod));
                         double r = _number - (l * mod);
-                        result = TranslateNumber(l.ToString()) + " " + denom[didx];
+                        result = TranslateNumber(l.ToString()) + " " + units[didx];
                         if (r > 0)
                         {
                             result = result + " " + TranslateNumber(r.ToString());
@@ -159,13 +157,12 @@ namespace ServerApp.Translator
                         return char.ToUpper(result[0]) + result.Substring(1);
                     }
                 }
-            }
-            return "";
+            }s
         }
         public string Translate(string number)
         {
             number = number.Trim();
-            // Empty string
+
             if (string.IsNullOrEmpty(number))
             {
                 return null;
@@ -173,10 +170,11 @@ namespace ServerApp.Translator
 
             number = number.TrimStart('0').PadLeft(1, '0');
 
+            bool isNegative = false;
             if (number[0] == '-')
             {
                 number = number.Substring(1);
-                return "Menos " + Translate(number);
+                isNegative = true;
             }
 
             List<string> numberSplit = new List<string>();
@@ -198,6 +196,12 @@ namespace ServerApp.Translator
                     numberSplit.Add(subNumber);
                     count = 0;
                 }
+            }
+
+            // Negative number
+            if (isNegative)
+            {
+                return "Menos " + Translate(number);
             }
 
             string result = "";
