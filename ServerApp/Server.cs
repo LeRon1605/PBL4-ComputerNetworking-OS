@@ -4,6 +4,7 @@ using Models.Mapper;
 using ServerApp.Translator;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -19,7 +20,6 @@ namespace ServerApp
 
         public Action<List<ResponseLog>> OnReceiveData;
         public Action<List<Client>> OnClientConnectionStateChanged;
-
         public Server()
         {
             Repository = new Repository();
@@ -34,19 +34,19 @@ namespace ServerApp
                 Socket.Listen(100);
                 new Task(() =>
                 {
-                    while (true)
+                    try
                     {
-                        try
+                        while (true)
                         {
                             Socket clientSocket = Socket.Accept();
                             Repository.AddClient(clientSocket);
                             OnClientConnectionStateChanged?.Invoke(Repository.Clients);
                             new Task(() => Receive(clientSocket)).Start();
                         }
-                        catch (SocketException)
-                        {
-                            break;
-                        }
+                    }
+                    catch (SocketException)
+                    {
+
                     }
                 }).Start();
             }
@@ -76,6 +76,17 @@ namespace ServerApp
             OnClientConnectionStateChanged?.Invoke(Repository.Clients);
             clientSocket.Shutdown(SocketShutdown.Both);
             clientSocket.Close();
+        }
+
+        public void RemoveClient(string ClientIp)
+        {
+            Socket clientSocket = Repository.GetSocket(ClientIp);
+            if (clientSocket != null)
+            {
+                clientSocket.Shutdown(SocketShutdown.Both);
+                Repository.RemoveClient(ClientIp);
+                OnClientConnectionStateChanged?.Invoke(Repository.Clients);
+            }
         }
 
         public ResponseDTO ProcessRequest(Socket clientSocket)

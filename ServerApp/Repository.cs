@@ -20,6 +20,11 @@ namespace ServerApp
             Responses = new List<ResponseLog>();
         }
 
+        public Socket GetSocket(string IP)
+        {
+            return ClientSockets.FirstOrDefault(x => x.RemoteEndPoint.ToString() == IP);
+        }
+
         public void AddClient(Socket socket)
         {
             Clients.Add(new Client
@@ -28,6 +33,12 @@ namespace ServerApp
                 ConnectedAt = DateTime.Now
             });
             ClientSockets.Add(socket);
+        }
+
+        public void RemoveClient(string IP)
+        {
+            ClientSockets = ClientSockets.Where(x => x.RemoteEndPoint.ToString() != IP).ToList();
+            Clients = Clients.Where(x => x.IP != IP).ToList();
         }
 
         public void RemoveClient(Socket socket)

@@ -1,5 +1,6 @@
 ﻿using Models.DTO;
 using Models.Entities;
+using Models.Utils.Formatter;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,16 +9,16 @@ namespace Models.Mapper
 {
     public class Mapper
     {
+        private static IFormatter _formatter = new NumberFormatter();
         public static ResponseLog MapResponse(ResponseDTO src)
         {
-
             return new ResponseLog
             {
                 Text = src.Text,
                 Status = src.Status ? "Success" : "Failure",
                 Exception = src.Exception,
                 Lang = GetLanguage(src.Lang),
-                Number = src.Number,
+                Number = _formatter.Format(src.Number),
                 Client = src.Client,
                 ResponseAt = src.ResponseAt
             };
@@ -31,7 +32,7 @@ namespace Models.Mapper
                 Status = src.Status ? "Success" : "Failure",
                 Exception = src.Exception,
                 Lang = GetLanguage(src.Lang),
-                Number = src.Number,
+                Number = _formatter.Format(src.Number),
                 Server = src.Server,
                 ResponseAt = src.ResponseAt
             };
