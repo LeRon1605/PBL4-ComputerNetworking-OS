@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -16,6 +17,7 @@ namespace ClientApp.View
     public partial class Main : Form
     {
         private Client client;
+        public bool IsConnected { get; set; }
         public Main()
         {
             InitializeComponent();
@@ -77,7 +79,7 @@ namespace ClientApp.View
                 }
                 catch (SocketException)
                 {
-                    MessageBox.Show("Can't connect to server", "notification", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Can't connect to server", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }        
             }
         }
@@ -89,6 +91,7 @@ namespace ClientApp.View
             lbConnecting.Text = state ? "Connecting" : "Idle";
             lbConnecting.BackColor = state ? Color.Green : Color.IndianRed;
             btnConnect.Text = state ? "Disconnect" : "Connect";
+            IsConnected = state;
         }
 
         private void ReceiveDataHandler(ResponseDTO response) 
@@ -104,11 +107,32 @@ namespace ClientApp.View
 
         private void DisconnectedHandler()
         {
-            Invoke(new MethodInvoker(() =>
+            if (IsConnected)
             {
-                MessageBox.Show("Server has been shut down", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                ConnectionStateChanged(false);
-            }));
+                // Server shutdown
+                Invoke(new MethodInvoker(() =>
+                {
+                    MessageBox.Show("You has been disconnected to server or server has been shutdown", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    ConnectionStateChanged(false);
+                }));
+            }
+        }
+
+        private void DgvHistory_SelectionChanged(object sender, EventArgs e)
+        {
+            if (DgvHistory.SelectedRows.Count == 1)
+            {
+                txtInput.Text = DgvHistory.SelectedRows[0].Cells["Number"]?.Value.ToString();
+                for (int i = 0;i < CbbLanguages.Items.Count; i++)
+                {
+                    if ((CbbLanguages.Items[i] as CbbItem).Text == DgvHistory.SelectedRows[0].Cells["Lang"].Value.ToString())
+                    {
+                        CbbLanguages.SelectedIndex = i;
+                        break;
+                    }
+                }
+                txtResult.Text = DgvHistory.SelectedRows[0].Cells["Text"]?.Value.ToString();
+            }
         }
     }
 }

@@ -53,11 +53,10 @@
             // 
             // txtResult
             // 
-            this.txtResult.Location = new System.Drawing.Point(131, 156);
-            this.txtResult.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.txtResult.Location = new System.Drawing.Point(115, 117);
             this.txtResult.Name = "txtResult";
             this.txtResult.ReadOnly = true;
-            this.txtResult.Size = new System.Drawing.Size(921, 174);
+            this.txtResult.Size = new System.Drawing.Size(806, 132);
             this.txtResult.TabIndex = 17;
             this.txtResult.Text = "";
             // 
@@ -65,18 +64,17 @@
             // 
             this.lbResult.AutoSize = true;
             this.lbResult.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.lbResult.Location = new System.Drawing.Point(21, 156);
+            this.lbResult.Location = new System.Drawing.Point(18, 117);
             this.lbResult.Name = "lbResult";
-            this.lbResult.Size = new System.Drawing.Size(56, 23);
+            this.lbResult.Size = new System.Drawing.Size(46, 19);
             this.lbResult.TabIndex = 16;
             this.lbResult.Text = "Result";
             // 
             // btnSend
             // 
-            this.btnSend.Location = new System.Drawing.Point(949, 338);
-            this.btnSend.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnSend.Location = new System.Drawing.Point(830, 254);
             this.btnSend.Name = "btnSend";
-            this.btnSend.Size = new System.Drawing.Size(103, 37);
+            this.btnSend.Size = new System.Drawing.Size(90, 28);
             this.btnSend.TabIndex = 13;
             this.btnSend.Text = "Send";
             this.btnSend.UseVisualStyleBackColor = true;
@@ -84,28 +82,26 @@
             // 
             // txtInput
             // 
-            this.txtInput.Location = new System.Drawing.Point(131, 39);
-            this.txtInput.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.txtInput.Location = new System.Drawing.Point(115, 29);
             this.txtInput.Name = "txtInput";
-            this.txtInput.Size = new System.Drawing.Size(921, 27);
+            this.txtInput.Size = new System.Drawing.Size(806, 23);
             this.txtInput.TabIndex = 12;
             // 
             // CbbLanguages
             // 
             this.CbbLanguages.FormattingEnabled = true;
-            this.CbbLanguages.Location = new System.Drawing.Point(130, 93);
-            this.CbbLanguages.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.CbbLanguages.Location = new System.Drawing.Point(114, 70);
             this.CbbLanguages.Name = "CbbLanguages";
-            this.CbbLanguages.Size = new System.Drawing.Size(922, 28);
+            this.CbbLanguages.Size = new System.Drawing.Size(807, 23);
             this.CbbLanguages.TabIndex = 11;
             // 
             // lbInput
             // 
             this.lbInput.AutoSize = true;
             this.lbInput.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.lbInput.Location = new System.Drawing.Point(21, 41);
+            this.lbInput.Location = new System.Drawing.Point(18, 31);
             this.lbInput.Name = "lbInput";
-            this.lbInput.Size = new System.Drawing.Size(73, 23);
+            this.lbInput.Size = new System.Drawing.Size(59, 19);
             this.lbInput.TabIndex = 10;
             this.lbInput.Text = "Number";
             // 
@@ -113,9 +109,9 @@
             // 
             this.lbLanguages.AutoSize = true;
             this.lbLanguages.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.lbLanguages.Location = new System.Drawing.Point(21, 93);
+            this.lbLanguages.Location = new System.Drawing.Point(18, 70);
             this.lbLanguages.Name = "lbLanguages";
-            this.lbLanguages.Size = new System.Drawing.Size(85, 23);
+            this.lbLanguages.Size = new System.Drawing.Size(69, 19);
             this.lbLanguages.TabIndex = 9;
             this.lbLanguages.Text = "Language";
             // 
@@ -123,18 +119,17 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.label1.Location = new System.Drawing.Point(7, 24);
+            this.label1.Location = new System.Drawing.Point(6, 18);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(90, 23);
+            this.label1.Size = new System.Drawing.Size(74, 19);
             this.label1.TabIndex = 18;
             this.label1.Text = "IP Address";
             // 
             // txtIpAddress
             // 
-            this.txtIpAddress.Location = new System.Drawing.Point(11, 53);
-            this.txtIpAddress.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.txtIpAddress.Location = new System.Drawing.Point(10, 40);
             this.txtIpAddress.Name = "txtIpAddress";
-            this.txtIpAddress.Size = new System.Drawing.Size(159, 27);
+            this.txtIpAddress.Size = new System.Drawing.Size(140, 23);
             this.txtIpAddress.TabIndex = 19;
             this.txtIpAddress.Text = "127.0.0.1";
             // 
@@ -142,27 +137,25 @@
             // 
             this.lbPort.AutoSize = true;
             this.lbPort.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.lbPort.Location = new System.Drawing.Point(7, 99);
+            this.lbPort.Location = new System.Drawing.Point(6, 74);
             this.lbPort.Name = "lbPort";
-            this.lbPort.Size = new System.Drawing.Size(41, 23);
+            this.lbPort.Size = new System.Drawing.Size(34, 19);
             this.lbPort.TabIndex = 20;
             this.lbPort.Text = "Port";
             // 
             // txtPort
             // 
-            this.txtPort.Location = new System.Drawing.Point(11, 129);
-            this.txtPort.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.txtPort.Location = new System.Drawing.Point(10, 97);
             this.txtPort.Name = "txtPort";
-            this.txtPort.Size = new System.Drawing.Size(159, 27);
+            this.txtPort.Size = new System.Drawing.Size(140, 23);
             this.txtPort.TabIndex = 21;
             this.txtPort.Text = "8000";
             // 
             // btnConnect
             // 
-            this.btnConnect.Location = new System.Drawing.Point(11, 312);
-            this.btnConnect.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.btnConnect.Location = new System.Drawing.Point(10, 234);
             this.btnConnect.Name = "btnConnect";
-            this.btnConnect.Size = new System.Drawing.Size(160, 40);
+            this.btnConnect.Size = new System.Drawing.Size(140, 30);
             this.btnConnect.TabIndex = 22;
             this.btnConnect.Text = "Connect";
             this.btnConnect.UseVisualStyleBackColor = true;
@@ -173,9 +166,9 @@
             this.lbConnecting.BackColor = System.Drawing.Color.IndianRed;
             this.lbConnecting.Font = new System.Drawing.Font("MV Boli", 14.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
             this.lbConnecting.ForeColor = System.Drawing.Color.White;
-            this.lbConnecting.Location = new System.Drawing.Point(11, 247);
+            this.lbConnecting.Location = new System.Drawing.Point(10, 185);
             this.lbConnecting.Name = "lbConnecting";
-            this.lbConnecting.Size = new System.Drawing.Size(160, 41);
+            this.lbConnecting.Size = new System.Drawing.Size(140, 31);
             this.lbConnecting.TabIndex = 23;
             this.lbConnecting.Text = "Idle";
             this.lbConnecting.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -188,9 +181,11 @@
             this.GbConnect.Controls.Add(this.txtIpAddress);
             this.GbConnect.Controls.Add(this.lbPort);
             this.GbConnect.Controls.Add(this.txtPort);
-            this.GbConnect.Location = new System.Drawing.Point(1094, 15);
+            this.GbConnect.Location = new System.Drawing.Point(957, 11);
+            this.GbConnect.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.GbConnect.Name = "GbConnect";
-            this.GbConnect.Size = new System.Drawing.Size(187, 382);
+            this.GbConnect.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.GbConnect.Size = new System.Drawing.Size(164, 286);
             this.GbConnect.TabIndex = 24;
             this.GbConnect.TabStop = false;
             this.GbConnect.Text = "Connect";
@@ -204,9 +199,11 @@
             this.GbInput.Controls.Add(this.btnSend);
             this.GbInput.Controls.Add(this.lbResult);
             this.GbInput.Controls.Add(this.txtInput);
-            this.GbInput.Location = new System.Drawing.Point(14, 15);
+            this.GbInput.Location = new System.Drawing.Point(12, 11);
+            this.GbInput.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.GbInput.Name = "GbInput";
-            this.GbInput.Size = new System.Drawing.Size(1074, 382);
+            this.GbInput.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.GbInput.Size = new System.Drawing.Size(940, 286);
             this.GbInput.TabIndex = 25;
             this.GbInput.TabStop = false;
             this.GbInput.Text = "Input";
@@ -214,11 +211,9 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.DgvHistory);
-            this.groupBox1.Location = new System.Drawing.Point(10, 404);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.groupBox1.Location = new System.Drawing.Point(9, 303);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox1.Size = new System.Drawing.Size(1271, 327);
+            this.groupBox1.Size = new System.Drawing.Size(1112, 245);
             this.groupBox1.TabIndex = 26;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Requests";
@@ -227,22 +222,23 @@
             // 
             this.DgvHistory.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.DgvHistory.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DgvHistory.Location = new System.Drawing.Point(7, 29);
-            this.DgvHistory.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.DgvHistory.Location = new System.Drawing.Point(6, 22);
             this.DgvHistory.Name = "DgvHistory";
             this.DgvHistory.RowHeadersWidth = 51;
             this.DgvHistory.RowTemplate.Height = 25;
-            this.DgvHistory.Size = new System.Drawing.Size(1257, 289);
+            this.DgvHistory.Size = new System.Drawing.Size(1100, 217);
             this.DgvHistory.TabIndex = 0;
+            this.DgvHistory.SelectionChanged += new System.EventHandler(this.DgvHistory_SelectionChanged);
             // 
             // Main
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1293, 732);
+            this.ClientSize = new System.Drawing.Size(1131, 549);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.GbInput);
             this.Controls.Add(this.GbConnect);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "Main";
             this.Text = "Client";
             this.GbConnect.ResumeLayout(false);

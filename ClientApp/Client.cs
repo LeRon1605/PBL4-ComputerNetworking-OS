@@ -14,8 +14,8 @@ namespace ClientApp
     {
         private Socket socket;
 
-        public Action<ResponseDTO> OnReceivedMessage;
-        public Action OnConnectionStateChanged;
+        public Action<ResponseDTO> OnReceivedMessage { get; set; }
+        public Action OnConnectionStateChanged { get; set; }
 
         public void Connect(string ipAddress, int port)
         {
@@ -51,6 +51,7 @@ namespace ClientApp
                     catch (SocketException)
                     {
                         OnConnectionStateChanged?.Invoke();
+                        Disconnect();
                     }
                 }).Start();
             }
@@ -60,7 +61,7 @@ namespace ClientApp
         {
             byte[] buffer = new byte[16384];
             socket.Receive(buffer);
-            string d = Encoding.UTF8.GetString(buffer).Replace("\0", "");
+            Console.WriteLine(buffer.Length);
             ResponseDTO res = ResponseDTO.Deserialize(Encoding.UTF8.GetString(buffer).Replace("\0", ""));
             return res;
         }

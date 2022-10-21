@@ -65,6 +65,7 @@ namespace ServerApp.View
             {
                 DgvHistory.DataSource = null;
                 DgvHistory.DataSource = requests;
+                DgvHistory.AutoResizeColumns();
             }));
         }
 
@@ -80,6 +81,23 @@ namespace ServerApp.View
         private void Main_FormClosed(object sender, FormClosedEventArgs e)
         {
             server.Disconnect();
+        }
+
+        private void dgvClient_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dgvClient.SelectedRows.Count == 1)
+            {
+                btnRemove.Enabled = true;
+            }
+        }
+
+        private void btnRemove_Click(object sender, EventArgs e)
+        {
+            if (dgvClient.SelectedRows.Count == 1)
+            {
+                server.RemoveClient(dgvClient.SelectedRows[0].Cells["IP"].Value.ToString());
+                btnRemove.Enabled = false;
+            }
         }
     }
 }
