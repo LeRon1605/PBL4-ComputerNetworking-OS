@@ -157,7 +157,8 @@ namespace ServerApp.Translator
                         return char.ToUpper(result[0]) + result.Substring(1);
                     }
                 }
-            }s
+            }
+            return result;
         }
         public string Translate(string number)
         {

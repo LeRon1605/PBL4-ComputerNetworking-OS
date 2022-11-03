@@ -9,7 +9,7 @@ namespace Models.Mapper
 {
     public class Mapper
     {
-        private static IFormatter _formatter = new NumberFormatter();
+        private static readonly IFormatter _formatter = new NumberFormatter();
         public static ResponseLog MapResponse(ResponseDTO src)
         {
             return new ResponseLog

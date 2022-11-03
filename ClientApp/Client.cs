@@ -61,7 +61,6 @@ namespace ClientApp
         {
             byte[] buffer = new byte[16384];
             socket.Receive(buffer);
-            Console.WriteLine(buffer.Length);
             ResponseDTO res = ResponseDTO.Deserialize(Encoding.UTF8.GetString(buffer).Replace("\0", ""));
             return res;
         }

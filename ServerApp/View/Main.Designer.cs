@@ -40,11 +40,21 @@
             this.label2 = new System.Windows.Forms.Label();
             this.lbState = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.txtResult = new System.Windows.Forms.RichTextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.txtLang = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.txtNum = new System.Windows.Forms.TextBox();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.txtClientIP = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DgvHistory)).BeginInit();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvClient)).BeginInit();
             this.groupBox3.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnListen
@@ -61,7 +71,7 @@
             // 
             this.groupBox1.Controls.Add(this.DgvHistory);
             this.groupBox1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.groupBox1.Location = new System.Drawing.Point(12, 247);
+            this.groupBox1.Location = new System.Drawing.Point(12, 469);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(1014, 320);
             this.groupBox1.TabIndex = 5;
@@ -77,6 +87,7 @@
             this.DgvHistory.RowTemplate.Height = 25;
             this.DgvHistory.Size = new System.Drawing.Size(1002, 290);
             this.DgvHistory.TabIndex = 0;
+            this.DgvHistory.SelectionChanged += new System.EventHandler(this.DgvHistory_SelectionChanged);
             // 
             // groupBox2
             // 
@@ -172,11 +183,95 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Connection";
             // 
+            // txtResult
+            // 
+            this.txtResult.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.txtResult.Location = new System.Drawing.Point(211, 48);
+            this.txtResult.Name = "txtResult";
+            this.txtResult.Size = new System.Drawing.Size(791, 126);
+            this.txtResult.TabIndex = 14;
+            this.txtResult.Text = "";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(211, 30);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(39, 15);
+            this.label3.TabIndex = 15;
+            this.label3.Text = "Result";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(6, 30);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(51, 15);
+            this.label4.TabIndex = 16;
+            this.label4.Text = "Number";
+            // 
+            // txtLang
+            // 
+            this.txtLang.Location = new System.Drawing.Point(6, 100);
+            this.txtLang.Name = "txtLang";
+            this.txtLang.Size = new System.Drawing.Size(176, 23);
+            this.txtLang.TabIndex = 17;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(6, 82);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(59, 15);
+            this.label5.TabIndex = 18;
+            this.label5.Text = "Language";
+            // 
+            // txtNum
+            // 
+            this.txtNum.Location = new System.Drawing.Point(6, 48);
+            this.txtNum.Name = "txtNum";
+            this.txtNum.Size = new System.Drawing.Size(176, 23);
+            this.txtNum.TabIndex = 19;
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.label6);
+            this.groupBox4.Controls.Add(this.txtClientIP);
+            this.groupBox4.Controls.Add(this.label4);
+            this.groupBox4.Controls.Add(this.label3);
+            this.groupBox4.Controls.Add(this.txtLang);
+            this.groupBox4.Controls.Add(this.txtResult);
+            this.groupBox4.Controls.Add(this.label5);
+            this.groupBox4.Controls.Add(this.txtNum);
+            this.groupBox4.Location = new System.Drawing.Point(12, 263);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(1008, 185);
+            this.groupBox4.TabIndex = 20;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Detail";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(6, 133);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(51, 15);
+            this.label6.TabIndex = 21;
+            this.label6.Text = "Client IP";
+            // 
+            // txtClientIP
+            // 
+            this.txtClientIP.Location = new System.Drawing.Point(6, 151);
+            this.txtClientIP.Name = "txtClientIP";
+            this.txtClientIP.Size = new System.Drawing.Size(176, 23);
+            this.txtClientIP.TabIndex = 20;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1038, 579);
+            this.ClientSize = new System.Drawing.Size(1038, 801);
+            this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -190,6 +285,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgvClient)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -207,5 +304,14 @@
         private System.Windows.Forms.DataGridView DgvHistory;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Button btnRemove;
+        private System.Windows.Forms.RichTextBox txtResult;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox txtLang;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox txtNum;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox txtClientIP;
     }
 }

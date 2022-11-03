@@ -122,7 +122,7 @@ namespace ClientApp.View
         {
             if (DgvHistory.SelectedRows.Count == 1)
             {
-                txtInput.Text = DgvHistory.SelectedRows[0].Cells["Number"]?.Value.ToString();
+                txtInput.Text = DgvHistory.SelectedRows[0].Cells["Number"]?.Value.ToString().Replace(".", "");
                 for (int i = 0;i < CbbLanguages.Items.Count; i++)
                 {
                     if ((CbbLanguages.Items[i] as CbbItem).Text == DgvHistory.SelectedRows[0].Cells["Lang"].Value.ToString())

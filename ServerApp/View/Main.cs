@@ -99,5 +99,16 @@ namespace ServerApp.View
                 btnRemove.Enabled = false;
             }
         }
+
+        private void DgvHistory_SelectionChanged(object sender, EventArgs e)
+        {
+            if (DgvHistory.SelectedRows.Count == 1)
+            {
+                txtResult.Text = DgvHistory.SelectedRows[0].Cells["Text"].Value.ToString();
+                txtNum.Text = DgvHistory.SelectedRows[0].Cells["Number"].Value.ToString();
+                txtLang.Text = DgvHistory.SelectedRows[0].Cells["Lang"].Value.ToString();
+                txtClientIP.Text = DgvHistory.SelectedRows[0].Cells["Client"].Value.ToString();
+            }
+        }
     }
 }
