@@ -13,9 +13,14 @@ namespace ClientApp
     public class Client
     {
         private Socket socket;
-
+        
+        public Repository Repository { get; set; }
         public Action<ResponseDTO> OnReceivedMessage { get; set; }
         public Action OnConnectionStateChanged { get; set; }
+        public Client()
+        {
+            Repository = new Repository();  
+        }
 
         public void Connect(string ipAddress, int port)
         {
@@ -45,7 +50,7 @@ namespace ClientApp
                     {
                         socket.Send(Encoding.UTF8.GetBytes(request.Serialize()));
                         ResponseDTO res = ProcessReceiveMessage();
-                        Repository.GetInstance().Requests.Add(Mapper.MapRequest(res));
+                        Repository.Requests.Add(Mapper.MapRequest(res));
                         OnReceivedMessage?.Invoke(res);
                     }
                     catch (SocketException)

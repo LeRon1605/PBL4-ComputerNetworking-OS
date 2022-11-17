@@ -100,7 +100,7 @@ namespace ClientApp.View
             {
                 txtResult.Text = response.Text;
                 DgvHistory.DataSource = null;
-                DgvHistory.DataSource = Repository.GetInstance().Requests;
+                DgvHistory.DataSource = client.Repository.Requests;
                 DgvHistory.AutoResizeColumns();
             }));
         }
